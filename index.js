@@ -12,7 +12,6 @@ app.use(express.json())
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@cluster0.farjvzi.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
@@ -62,6 +61,14 @@ async function run() {
             res.send(reviews)
         })
 
+
+        app.get('/reviews/:id', async (req, res) => {
+            const reviewId = req.params.id;
+            const cursor = reviewCollection.find({ id: reviewId });
+            const reviews = await cursor.toArray()
+            res.send(reviews)
+        })
+
     }
     finally {
 
@@ -69,7 +76,6 @@ async function run() {
 }
 
 run().catch(error => console.log(error))
-
 
 
 app.get('/', (req, res) => {
